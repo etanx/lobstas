@@ -1,2 +1,2 @@
 # lobstas
-# low-cost benthic weather station 
+# low-cost benthic weather station with camera and sensor
