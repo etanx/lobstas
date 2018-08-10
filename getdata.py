@@ -1,6 +1,21 @@
-# initiates sensor data collection and image capture
+# initiates sensor data collection and image capture, shutsdown when complete
 # author: Elizabeth H. Tan
-# last revised:  2018
+# last revised: 10 August 2018
+
+# Pi Camera code
+#     https://github.com/waveform80/picamera
+#     Copyright 2013-2017 Dave Jones <dave@waveform.org.uk>
+
+# Atlas Scientific sensor code 
+#     https://github.com/AtlasScientific/Raspberry-Pi-sample-code
+#     Copyright (c) 2016 AtlasScientific
+
+# Neopixel LED Ring code  
+#     https://github.com/jgarff/rpi_ws281x
+#     Copyright (c) 2014, jgarff
+#     All rights reserved.
+
+
 
 import os
 import datetime
@@ -23,24 +38,24 @@ DO = 'N/A' # global variable
 class cam:
     #camera settings
     resolution = (1296,972)       # note: this affects field of view (FOV)
-    framerate = 30                  # min Fraction(1,6)
-    whitebalance = 'auto'          # auto, cloudy, fluorescent etc
-    exposure = 'auto'		# auto, nightpreview, verylong, beach etc
+    framerate = 15                 # minimum Fraction(1,6)
+    whitebalance = 'auto'          # auto, off, cloudy, fluorescent, flash etc
+    exposure = 'nightpreview'	  # auto, nightpreview, backlight, beach etc
 
     rotate = 180                      # rotate view
     brightness = 50                   # 0-100, default 50
-    contrast = 10	
-    sharpness = 40		
+    contrast = 0		      # -100 to 100, default 0
+    sharpness = 40		      # 0-100, default 0
 
-    pvscreen = 0
-    pvtime = 0.5
+    pvscreen = 0	# 1 = deisplayed preview over HDMI monitor
+    pvtime = 0.5	# preview time before capture
 
     #manual settings only if enabled
-    manual = 0                 # set 1 to enable
-    ISO = 800                       # sensitivity 0(auto), max 800
-    shutterspeed = Fraction(1,15)		         #  0 (auto), max 6s
+    manual = 0                 		# set 1 to enable
+    ISO = 800                  		# sensitivity 0(auto), max 800
+    shutterspeed = Fraction(1,15)         #  0 (auto), max 6s
 
-    vidlength = 30 # default video length
+    vidlength = 15 	# default video length
 
     settings = ''
 
@@ -164,7 +179,7 @@ class light:
 class dosensor:
 	long_timeout = 1.5         	# the timeout needed to query readings and calibrations
 	short_timeout = .5         	# timeout for regular commands
-	default_bus = 1         	   # the default bus for I2C on the newer Raspberry Pis, certain older boards use bus 0
+	default_bus = 1         	# the default bus for I2C on the newer Raspberry Pis, certain older boards use bus 0
 	default_address = 97     	# the default address for the sensor
 	current_addr = default_address
 
@@ -288,7 +303,7 @@ class power:
 		    print('Connected to WiceFi '+wifi_ip)
 	    elif '192.168.43.1' in wifi_ip:
 		    status=2
-		    print('Connected to ETN Hotspot ' +wifi_ip)
+		    print('Connected to Mobile  Hotspot ' +wifi_ip)
 	    elif wifi_ip == None:
 		    status = 0
 		    print('No wifi connected.')
@@ -328,14 +343,14 @@ def main():
     if local.space >= min_space:
 
         # take pics and vid
-        light().on()
+        #light().on()
         (c,annotate) = cam().setup()
 	cam().vid(c)
         cam().pic(c,annotate) #take first picture
 	time.sleep(1)
         cam().pic(c,annotate) # take second picture
         cam().close(c)
-        light().off()
+        #light().off()
 
     else:
         print('Stopped: Storage reached minimum (' + str(min_space) + ') MB.')
@@ -361,5 +376,11 @@ if __name__ == '__main__':
 
     thread1.join()
     thread2.join()
-    print("Threads complete!")
+    print("Threads complete! Checking for wifi...")
+    
+    status = power().wifi
 
+    if status == 0:
+	power().shutdown()
+    else:
+	print("Wifi connected, not shutting down.")

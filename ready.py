@@ -1,6 +1,7 @@
 # checking interface before deployment
 
 from getdata import *
+import sys
 
 print("====== CAMERA ======")
 print("Resolution: " + str(cam.resolution[0]) + "x" + str(cam.resolution[1]))
@@ -31,8 +32,9 @@ camcheck = raw_input("\nCamera settings correct? (y/n)")
 if 'y' in camcheck:
 	print("")
 else:
-	print("Please edit details in getdata.py")
-	exit
+	sys.exit("Please edit camera details in getdata.py")
+
+
 
 print("==== LIGHTING ====")
 print('Sunrise hour ' + str(light.sunrise))
@@ -46,8 +48,7 @@ lightcheck = raw_input("\nLighting settings correct? (y/n)")
 if 'y' in camcheck:
         print("")
 else:
-        print("Please edit details in getdata.py")
-        exit
+        sys.exit("Please edit lighting details in getdata.py")
 
 
 print("")
@@ -59,38 +60,48 @@ print("i2C bus " + str(dosensor.default_bus))
 
 confirm = raw_input("\nAre all DO details correct? (y/n)")
 
+if 'y' in confirm:
+	print(" ")
+else:
+	sys.exit("Please check sensor details.")
+
+
 print("WittyPi schedules available:")
 print("1) 10 minutes")
 print("2) 15 minutes")
 print("3) 30 minutes")
 print("4) 1 hour")
+print("5) Exit")
 
 choice = raw_input("\nChoose sampling interval (1-4):")
 
-if choice: 
+if '1' in choice: 
 	interv = ('10m')
-elif 2 in choice:
+elif '2' in choice:
 	interv = ('15m')
-elif 3 in choice:
+elif '3' in choice:
 	interv = ('30m')
-elif 4 in choice:
+elif '4' in choice:
 	interv = ('1h')
+elif '5' in choice:
+	sys.exit("Exiting script.")
 else:
-	print("Warning: Chosen interval beyond choices")
+	sys.exit("Option not selected.")
 
-print("\nCopying schedule file...")
+print("\nCopying " + interv + " schedule file...")
+
+# copies schedule to witty pi main schedule and executed
 os.system('sudo cp /home/pi/wittyPi/schedules/interval' + interv + '.wpi /home/pi/wittyPi/schedule.wpi')
 os.system('sudo /home/pi/wittyPi/runScript.sh')
 
 
-confirm = raw_input("All details ready for deployment? (y/n)")
+confirm = raw_input("Shutdown for deployment? (y/n)")
 if 'y' in confirm:
 	print("Ready to go! Shutting down...")
 	import os
 	os.system('sudo shutdown')
 	import time
 	time.sleep(60)
-	#execfile('getdata.py')
 else:
-	print("Please edit details in getdata.py")
+	sys.exit("Shut down cancelled.")
 
