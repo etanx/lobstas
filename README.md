@@ -1,2 +1,34 @@
+lobstas
+==========
 
-# Work in Progrerss: low-cost benthic weather station with camera and sensor
+Code for collecting data with the LoBSTAS.
+getdata.py uses the pica
+
+
+### Setup
+
+Intall picamera library (https://github.com/waveform80/picamera)
+
+Install neopixel library if you are using the LED ring (https://github.com/jgarff/rpi_ws281x)
+
+To enable bootrun.py on boot and a log file, add the following lines to /etc/rc.local before exit 0
+
+    exec 2>> /home/pi/bootlog.log       # add stderr from rc.local to a log file
+    exec 1>&2                           # add stdout to same file
+    sudo python /home/pi/bootrun.py &   # ensure file path is correct
+    
+# Sensor calibration and setup
+This is for the Atlas Scientific Dissolved Oxygen sensor.
+
+If the sensor is not a steady blue, it needs to be set to i2c mode:
+
+1. Disconnect all wires
+2. Connect PGND to TX
+3. Connect VCC and ground to board, and wait for LED to turn blue
+4. Disconnect power and reconnect all wires
+
+To calibrate to atmospheric concentration:
+
+    from getdata import dosensor
+    dosensor().query("CAL")
+
