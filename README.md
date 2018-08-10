@@ -1,9 +1,9 @@
 lobstas
 ==========
-Code for collecting data with the LoBSTAS.
+Code for collecting data with the Low-cost Benthic Sensing Trap-Attached System (LoBSTAS)
 
 
-## Setup
+## Installation
 
 Intall picamera library (https://github.com/waveform80/picamera)
 
