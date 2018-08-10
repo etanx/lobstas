@@ -1,8 +1,6 @@
 lobstas
 ==========
-
 Code for collecting data with the LoBSTAS.
-getdata.py uses the pica
 
 
 ## Setup
@@ -11,11 +9,13 @@ Intall picamera library (https://github.com/waveform80/picamera)
 
 Install neopixel library if you are using the LED ring (https://github.com/jgarff/rpi_ws281x)
 
-To enable bootrun.py on boot and a log file, add the following lines to /etc/rc.local before exit 0
+To enable bootrun.py on boot, add the following lines to /etc/rc.local before exit 0
 
     exec 2>> /home/pi/bootlog.log       # add stderr from rc.local to a log file
     exec 1>&2                           # add stdout to same file
     sudo python /home/pi/bootrun.py &   # ensure file path is correct
+    
+    exit 0
     
 ## Sensor calibration and setup
 This is for the Atlas Scientific Dissolved Oxygen sensor.
