@@ -1,7 +1,9 @@
 # Monitoring Seabed Dynamics with LoBSTAS
 ==========
 
-Code for collecting data with the Low-cost Benthic Sensing Trap-Attached System (LoBSTAS). Bootrun.py is a code that will be run on startup, and this is where directions to the Pi will go. GetData.py is where data collection is initiated, while Ready.py displays data collection settings to user for checking before initiating deployment.
+Code for collecting data with the Low-cost Benthic Sensing Trap-Attached System (LoBSTAS). Bootrun.py is a code that will be run on startup, and this is where directions to the Pi will go. GetData.py is where data collection is initiated, while Ready.py displays data collection settings to user for checking before initiating deployment. 
+
+NOTE: Images and videos captured are currently directed to folder (/home/pi/pic and /home/pi/vid), ensure that these folders are created.
 
 
 ## Installation
@@ -18,7 +20,7 @@ To enable bootrun.py on boot, add the following lines to /etc/rc.local before ex
     
     exit 0
     
-## Sensor calibration and setup
+## D.O. Sensor calibration and setup
 This is for the Atlas Scientific Dissolved Oxygen sensor.
 
 If the sensor is not a steady blue, it needs to be set to i2c mode:
