@@ -1,6 +1,6 @@
 lobstas
 ==========
-Code for collecting data with the Low-cost Benthic Sensing Trap-Attached System (LoBSTAS)
+Code for collecting data with the Low-cost Benthic Sensing Trap-Attached System (LoBSTAS). Bootrun is a code that will be run on startup, and this is where directions to the Pi will go. Getdata is where data collection is initiated.
 
 
 ## Installation
