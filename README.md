@@ -23,7 +23,7 @@ To enable bootrun.py on boot, add the following lines to /etc/rc.local before ex
 ## D.O. Sensor calibration and setup
 This is for the Atlas Scientific Dissolved Oxygen sensor.
 
-If the sensor is not a steady blue, it needs to be set to i2c mode:
+If the sensor board LEd light is not a steady blue color, it needs to be set to i2c mode:
 
 1. Disconnect all wires
 2. Connect PGND to TX
