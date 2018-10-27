@@ -1,5 +1,6 @@
 # Monitoring Seabed Dynamics with LoBSTAS
 ==========
+
 Code for collecting data with the Low-cost Benthic Sensing Trap-Attached System (LoBSTAS). Bootrun.py is a code that will be run on startup, and this is where directions to the Pi will go. GetData.py is where data collection is initiated, while Ready.py displays data collection settings to user for checking before initiating deployment.
 
 
