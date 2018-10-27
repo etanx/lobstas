@@ -8,7 +8,7 @@ NOTE: Images and videos captured are currently directed to folder (/home/pi/pic 
 
 ## Installation
 
-Intall picamera library (https://github.com/waveform80/picamera)
+Install picamera library (https://github.com/waveform80/picamera)
 
 Install neopixel library if you are using the LED ring (https://github.com/jgarff/rpi_ws281x)
 
