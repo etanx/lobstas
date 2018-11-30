@@ -13,15 +13,15 @@ Install picamera library (https://github.com/waveform80/picamera)
 
 Install neopixel library if you are using the LED ring (https://github.com/jgarff/rpi_ws281x)
 
-To enable bootrun.py on boot, add the following lines to /etc/rc.local before exit 0
+To enable bootrun.py on boot, add the following lines to /etc/rc.local before line 'exit 0'
 
-    exec 2>> /home/pi/bootlog.log       # add stderr from rc.local to a log file
-    exec 1>&2                           # add stdout to same file
-    sudo python /home/pi/bootrun.py &   # ensure file path is correct
+    exec 2>> /home/pi/lobstas/bootlog.log       # add stderr from rc.local to a log file
+    exec 1>&2                                   # add stdout to same file
+    sudo python /home/pi/lobstas/bootrun.py &   # runs initial python script
     
     exit 0
     
-NOTE: Images and videos captured are currently directed to folder (/home/pi/pic and /home/pi/vid), ensure that these folders exist in the rght directory.
+NOTE: Images and videos captured are currently directed to folder (/home/pi/lobstas/pic and /home/pi/lobstas/vid), ensure that these folders exist in the rght directory. Also check for sensor data folder (/home/pi/lobstas/sensor)
     
 ## D.O. Sensor calibration and setup
 This is for the Atlas Scientific Dissolved Oxygen sensor.
@@ -37,4 +37,13 @@ To calibrate to atmospheric concentration:
 
     from getdata import dosensor
     dosensor().query("CAL")
-
+    
+## To Collect Data
+Login to Pi and navigate to lobstas folder by typing command
+    cd /home/pi/lobstas
+For testing data collection, type
+    sudo python getdata.py
+For full, long-term deployment, go to bootrun.py and set deploy=1 in script (this starts data capture whenever the Pi starts up). Then type this command to double check settings:
+    sudo python ready.py
+    
+NOTE: The Pi will auto-shutdown at end of data collection if it is not connected to the Wifi/Hotspot specified in getdata.py (in the power class).
