@@ -1,6 +1,9 @@
-# checking interface before deployment
+# Checking interface before deployment that displays parameters
+# and copies sleep-wake schedule of WittyPi.
+# author: Elizabeth H. Tan, 08 August 2018
 
-from getdata import *
+# import all variables in the getdata.py classes
+from getdata import * 
 import sys
 
 print("====== CAMERA ======")
@@ -90,7 +93,7 @@ else:
 
 print("\nCopying " + interv + " schedule file...")
 
-# copies schedule to witty pi main schedule and executed
+# copies schedule to WittyPi main schedule and execute
 try:
 	os.system('sudo cp /home/pi/wittyPi/schedules/interval' + interv + '.wpi /home/pi/wittyPi/schedule.wpi')
 	os.system('sudo /home/pi/wittyPi/runScript.sh')
