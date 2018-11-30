@@ -7,5 +7,5 @@ from time import sleep
 if deploy == 1:
 	import os
 	# script will shut down after completion if no wifi detected
-	os.system('sudo python /home/pi/getdata.py')
+	os.system('sudo python /home/pi/lobstas/getdata.py')
 
