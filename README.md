@@ -1,7 +1,7 @@
 # Monitoring Seabed Dynamics with LoBSTAS
 ==========
 
-Code for collecting data with the Low-cost Benthic Sensing Trap-Attached System (LoBSTAS), a project birthed at GeotracerKitchen.org. Bootrun.py is a code that will be run on startup, and this is where directions to the Pi will go. GetData.py is where data collection is initiated, while Ready.py displays data collection settings to user for checking before initiating deployment. 
+Raspberry Pi 3/Zero code for collecting data with the Low-cost Benthic Sensing Trap-Attached System (LoBSTAS), a project birthed at GeotracerKitchen.org. Bootrun.py is a code that will be run on startup, and this is where directions to the Pi will go. GetData.py is where data collection is initiated, while Ready.py displays data collection settings to user for checking before initiating deployment. 
 
 Hackaday Project Logs:
 https://hackaday.io/project/160192-lobstas-underwater-camera-sensor
@@ -9,11 +9,14 @@ https://hackaday.io/project/160192-lobstas-underwater-camera-sensor
 
 ## Installation
 
-Install picamera library (https://github.com/waveform80/picamera)
+Install picamera library (https://github.com/waveform80/picamera). You may download from git and compile or use the eaesier command:
+    sudo apt-get install python-picamera
 
-Install neopixel library if you are using the LED ring (https://github.com/jgarff/rpi_ws281x)
+Install neopixel library if you are using the Neopixel LED ring (https://github.com/jgarff/rpi_ws281x)
 
-To enable bootrun.py on boot, add the following lines to /etc/rc.local before line 'exit 0'
+Install Witty Pi (https://github.com/uugear/Witty-Pi) or WittyPi2 (https://github.com/uugear/Witty-Pi-2) library.
+
+To automatically run bootrun.py on boot, add the following lines to /etc/rc.local before line 'exit 0'
 
     exec 2>> /home/pi/lobstas/bootlog.log       # add stderr from rc.local to a log file
     exec 1>&2                                   # add stdout to same file
