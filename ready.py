@@ -91,9 +91,11 @@ else:
 print("\nCopying " + interv + " schedule file...")
 
 # copies schedule to witty pi main schedule and executed
-os.system('sudo cp /home/pi/wittyPi/schedules/interval' + interv + '.wpi /home/pi/wittyPi/schedule.wpi')
-os.system('sudo /home/pi/wittyPi/runScript.sh')
-
+try:
+	os.system('sudo cp /home/pi/wittyPi/schedules/interval' + interv + '.wpi /home/pi/wittyPi/schedule.wpi')
+	os.system('sudo /home/pi/wittyPi/runScript.sh')
+except:
+	print("Please make sure WittyPi is installed.")
 
 confirm = raw_input("Shutdown for deployment? (y/n)")
 if 'y' in confirm:
