@@ -1,6 +1,6 @@
-# initiates sensor data collection and image capture, shutsdown when complete
+# LoBSTAS data collection, camera/power/memory management script.
 # author: Elizabeth H. Tan
-# last revised: 10 August 2018
+# created: 10 August 2018
 
 # Pi Camera code
 #     https://github.com/waveform80/picamera
@@ -14,8 +14,6 @@
 #     https://github.com/jgarff/rpi_ws281x
 #     Copyright (c) 2014, jgarff
 #     All rights reserved.
-
-
 
 import os
 import datetime
@@ -31,7 +29,13 @@ import fcntl      # used to access I2C parameters like addresses
 import time       # used for sleep delay and timestamps
 import string     # helps parse strings
 
-DO = 'N/A' # global variable
+# initialize global variable to be displayed in video
+DO = 'N/A' 
+
+# create directories for data storage if non-existent
+os.system('sudo mkdir -p /home/pi/lobstas/vid')
+os.system('sudo mkdir -p /home/pi/lobstas/pic')
+os.system('sudo mkdir -p /home/pi/lobstas/sensor')
 
 ##############################################################################
 # object class for camera pictures and videos
@@ -59,7 +63,7 @@ class cam:
 
     settings = ''
 
-    # initialize camera
+    # function to initialize camera
     def setup(self, preview=pvtime, previewscreen=pvscreen,res=resolution,fps=framerate, sh=shutterspeed, iso=ISO, wb=whitebalance,exp=exposure, rot=rotate, sharp=sharpness, cont=contrast, bright=brightness):
 	self.camera = PiCamera()
         self.camera.resolution = res
@@ -88,20 +92,21 @@ class cam:
 
 	return (self.camera,self.settings) 
 
+    # function to capture image
     def pic(self,camera,annotate=settings):
     	# captures image
 	date = datetime.datetime.now().strftime("%Y%m%d_%H_%M_%S")
 	camera.annotate_text = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S ") + annotate + ' ' + DO + ' mg/L'
-  	camera.capture('/home/pi/pic/img' + date + '.jpeg')
+  	camera.capture('/home/pi/lobstas/pic/img' + date + '.jpeg')
 	print('Captured img' + date[2:17] + '.jpeg')
 
-
+    # function to capture video
     def vid(self,camera,vidlength=vidlength):
         date = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         camera.annotate_text = date + ' ' + DO + ' mg/L'
 
         try:
-            camera.start_recording('/home/pi/vid/vid_' + date + '.h264')
+            camera.start_recording('/home/pi/lobstas/vid/vid_' + date + '.h264')
             print(date + " Recording started: Ctrl-C to stop...")
 
             start = datetime.datetime.now()
@@ -126,7 +131,7 @@ class cam:
 
     	camera.close()	
 
-
+# object class for LEd lights
 class light:
     sunrise = 6 # hour of sunrise in 24hr format
     sunset = 19 # hour of sunset in 24hr format
@@ -136,7 +141,8 @@ class light:
     R = 255
     G = 190
     B = 190
-
+    
+    # function to turn on standard LED ring
     def on(self,pin=LEDpin, set=sunset, rise=sunrise):
 	    GPIO.setwarnings(False)
 	    GPIO.setmode(GPIO.BOARD)
@@ -146,14 +152,16 @@ class light:
 	    d = datetime.datetime.now()
 	    if (d.hour >= set or d.hour <= rise):
 		    GPIO.output(pin,GPIO.HIGH)	
-
+			
+    # function to turn off standard LED ring
     def off(self, pin=LEDpin, set=sunset, rise=sunrise):
 	d = datetime.datetime.now()
         if (d.hour >= set or d.hour <= rise):
 		GPIO.output(pin,GPIO.LOW)
         GPIO.cleanup()
 
-
+    # function to turn on neopixel LED ring
+    # make sure neopixel library is installed!
     def neopixel(self,R,G,B):    
         # LED strip configuration:
         LED_COUNT      = 16      # Number of LED pixels.
@@ -175,7 +183,7 @@ class light:
         return
 
 
-# object class for I2C sensor
+# object class for Atlas Scientific I2C D.O. sensor
 class dosensor:
 	long_timeout = 1.5         	# the timeout needed to query readings and calibrations
 	short_timeout = .5         	# timeout for regular commands
@@ -244,7 +252,6 @@ class dosensor:
 
 
 	def poll(self, readings=doreadings,interval=dointerval):
-
         	# collect data into CSV
         	filename = datetime.datetime.now().strftime("%Y%m%d")
 		print('Saving data in do' + filename + '.csv')
@@ -264,7 +271,7 @@ class dosensor:
 		    d = datetime.datetime.now()
 
 		    # write DO data to file and save
-            	    with open('/home/pi/DOsensor/do' + filename + '.csv','ab') as f:
+            	    with open('/home/pi/lobstas/sensor/do' + filename + '.csv','ab') as f:
                 	writer = csv.writer(f)
                 	writer.writerow([do,d.year,d.month,d.day,d.hour,d.minute,d.second])
 
@@ -279,8 +286,11 @@ class dosensor:
             		self.query('sleep')
         	except IOError:
             		pass    
-
+		
+# object class for power functions
 class power:
+	
+    # power saving for still-functional Pi
     def save():
 	    os.system('sudo /usr/bin/tvservice -o')    #disables HDMI
 	    os.system("echo '1-1' | sudo tee /sys/bus/usb/drivers/usb/unbind") #USB/LAN
@@ -290,9 +300,7 @@ class power:
 	    print('\n')	
 	    print('Disabled HDMI, USB, LAN, and LEDs.')
 
-
-
-        # checks if important wifi is connected for shutdown
+    # checks if lab wifi or hotspot is connected for shutdown
     def wifi():
 	    from subprocess import Popen, PIPE
 	    pipe = Popen("ip route show | grep 'default' | awk '{print $3}' ",shell=True, stdout=PIPE).stdout
@@ -309,6 +317,7 @@ class power:
 		    print('No wifi connected.')
 	    return status
 
+    # shuts down raspberry pi
     def shutdown(self):
         # try to go to sleep
 	    status = self.wifi()
@@ -317,14 +326,14 @@ class power:
         	os.system('sudo halt')
 
 
-# Create an object class for each storage  drive
+# Create an object class for each storage drive
 class StorageDrive:
 	def __init__(self,name,path):
 
 		self.name = name
 		self.path = path
 		# Try to open the USB drives, if you cannot open the drive, 
-        #mark as not present and set size availabe as 0
+                #mark as not present and set size availabe as 0
 		try:
 			usb = os.statvfs(path)
 			self.space = (usb.f_frsize * usb.f_bfree)/1024/1024
@@ -333,8 +342,9 @@ class StorageDrive:
 			self.space = 0
 			self.present = 0
 
-
+# main function to execute data collection
 def main():
+    # first check for available storage
     min_space = 50 #minimum space required in MB
     local = StorageDrive('root','/')
     print('Storage available = ' + str(local.space) + ' MB')
@@ -343,41 +353,46 @@ def main():
     if local.space >= min_space:
 
         # take pics and vid
-        #light().on()
+        #light().on()          # turns LED light on
         (c,annotate) = cam().setup()
 	cam().vid(c)
         cam().pic(c,annotate) #take first picture
 	time.sleep(1)
         cam().pic(c,annotate) # take second picture
         cam().close(c)
-        #light().off()
+        #light().off()         # turns LEd light off
 
     else:
         print('Stopped: Storage reached minimum (' + str(min_space) + ') MB.')
         print('\n')
 
-    #power().shutdown() # DO THIS IN ANOTHER EXECUTING SCRIPT
+    #power().shutdown() # MOVED THIS TO ANOTHER EXECUTING SCRIPT
 
-
-# run functions if called directly
+####################################################################################
+# run functions if script is called directly
 if __name__ == '__main__':
+	
     from threading import Thread
     import math
    
-    # get number of DO points to match length of video
+    # get number of DO sensor points to match length of video
     points = math.ceil(cam().vidlength / dosensor().dointerval) + 1    
     print("Number of D.O. points to measure: " + str(int(points)))
-
+    
+    # start the first thread
     thread1 = Thread(target = dosensor().poll, args = (int(points),))
     thread1.start()
-
+	
+    # start the second thread
     thread2 = Thread(target = main, args = ())
     thread2.start()
 
+    # wait for both threads to finish
     thread1.join()
     thread2.join()
     print("Threads complete! Checking for wifi...")
-    
+ 
+    # Checks for WiceFi or ET's Mobile Hotspot
     status = power().wifi
 
     if status == 0:
