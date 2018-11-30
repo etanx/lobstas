@@ -10,8 +10,9 @@ https://hackaday.io/project/160192-lobstas-underwater-camera-sensor
 ## Installation
 
 Install picamera library (https://github.com/waveform80/picamera). You may download from git and compile or use the eaesier command:
-    sudo apt-get install python-picamera
-
+```shell
+sudo apt-get install python-picamera
+```
 Install neopixel library if you are using the Neopixel LED ring (https://github.com/jgarff/rpi_ws281x)
 
 Install Witty Pi (https://github.com/uugear/Witty-Pi) or WittyPi2 (https://github.com/uugear/Witty-Pi-2) library.
@@ -43,10 +44,15 @@ To calibrate to atmospheric concentration:
     
 ## To Collect Data
 Login to Pi and navigate to lobstas folder by typing command
-    cd /home/pi/lobstas
+```shell
+cd /home/pi/lobstas
+```
 For testing data collection, type
-    sudo python getdata.py
+```shell
+sudo python getdata.py
+```
 For full, long-term deployment, go to bootrun.py and set deploy=1 in script (this starts data capture whenever the Pi starts up). Then type this command to double check settings:
-    sudo python ready.py
-    
+```shell
+sudo python ready.py
+```
 NOTE: The Pi will auto-shutdown at end of data collection if it is not connected to the Wifi/Hotspot specified in getdata.py (in the power class).
