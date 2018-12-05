@@ -1,13 +1,18 @@
 # Monitoring Seabed Dynamics with LoBSTAS
 ==========
 
-Raspberry Pi 3/Zero code for collecting data with the Low-cost Benthic Sensing Trap-Attached System (LoBSTAS), a project birthed at GeotracerKitchen.org. Bootrun.py is a code that will be run on startup, and this is where directions to the Pi will go. GetData.py is where data collection is initiated, while Ready.py displays data collection settings to user for checking before initiating deployment. 
+Raspberry Pi 3/Zero code for collecting data with the Low-cost Benthic Sensing Trap-Attached System (LoBSTAS), a project birthed at GeotracerKitchen.org. Bootrun.py is a code that will be run on startup, and this is where directions to the Pi will go. GetData.py is where data collection is initiated, while Ready.py displays data collection settings to user for checking before initiating deployment. Additional comments on the functions of the code can be found in the respective scripts.
 
 Hackaday Project Logs:
 https://hackaday.io/project/160192-lobstas-underwater-camera-sensor
 
 
 ## Installation
+Download code from this repository asn well as dependencies and packages needed.
+```
+sudo apt-get install git
+git clone https://github.com/etanx/lobstas.git
+```
 
 Install picamera library (https://github.com/waveform80/picamera). Documentation can be found at https://picamera.readthedocs.io/en/release-1.13/. You may download from git and compile or use the easier command:
 ```shell
@@ -58,7 +63,7 @@ To calibrate to atmospheric concentration eun the following lines:
     from getdata import dosensor
     dosensor().query("CAL")
     
-## To Collect Data
+## Data Collection
 NOTE: Images and videos captured are currently directed to folder (/home/pi/lobstas/pic and /home/pi/lobstas/vid), ensure that these folders exist in the rght directory. Also check for sensor data folder (/home/pi/lobstas/sensor)
 
 Login to Pi and navigate to lobstas folder by typing command
