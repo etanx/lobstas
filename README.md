@@ -9,14 +9,25 @@ https://hackaday.io/project/160192-lobstas-underwater-camera-sensor
 
 ## Installation
 
-Install picamera library (https://github.com/waveform80/picamera). You may download from git and compile or use the eaesier command:
+Install picamera library (https://github.com/waveform80/picamera). Documentation can be found at https://picamera.readthedocs.io/en/release-1.13/. You may download from git and compile or use the easier command:
 ```shell
 sudo apt-get install python-picamera
 ```
-Install neopixel library if you are using the Neopixel LED ring (https://github.com/jgarff/rpi_ws281x)
+Install neopixel library if you are using the Neopixel LED ring (https://github.com/jgarff/rpi_ws281x). If you get an error about 'bad zip files', go to https://github.com/jgarff/rpi_ws281x/issues/290 and see solution by hnoesekabel.
+```
+sudo apt-get install build-essential python-dev git scons swig
+git clone https://github.com/jgarff/rpi_ws281x.git
+cd rpi_ws281x
+scons
+cd python
+sudo python setup.py install
+```
 
-Install Witty Pi (https://github.com/uugear/Witty-Pi) or WittyPi2 (https://github.com/uugear/Witty-Pi-2) library.
-
+Install Witty Pi (https://github.com/uugear/Witty-Pi) or WittyPi2 (https://github.com/uugear/Witty-Pi-2) library. Read WittyPi manual for how to run and program the shell script.
+```
+wget http://www.uugear.com/repo/WittyPi2/installWittyPi.sh
+sudo sh installWittyPi.sh
+```
 To automatically run bootrun.py on boot, add the following lines to /etc/rc.local before line 'exit 0'
 
     exec 2>> /home/pi/lobstas/bootlog.log       # add stderr from rc.local to a log file
@@ -26,6 +37,7 @@ To automatically run bootrun.py on boot, add the following lines to /etc/rc.loca
     exit 0
     
 NOTE: Images and videos captured are currently directed to folder (/home/pi/lobstas/pic and /home/pi/lobstas/vid), ensure that these folders exist in the rght directory. Also check for sensor data folder (/home/pi/lobstas/sensor)
+
     
 ## D.O. Sensor calibration and setup
 This is for the Atlas Scientific Dissolved Oxygen sensor.
