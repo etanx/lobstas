@@ -1,7 +1,7 @@
 # Monitoring Seabed Dynamics with LoBSTAS
 ==========
 
-Raspberry Pi 3/Zero code for collecting data with the Low-cost Benthic Sensing Trap-Attached System (LoBSTAS), a project birthed at GeotracerKitchen.org. Bootrun.py is a code that will be run on startup, and this is where directions to the Pi will go. GetData.py is where data collection is initiated, while Ready.py displays data collection settings to user for checking before initiating deployment. Additional comments on the functions of the code can be found in the respective scripts.
+Raspberry Pi 3/Zero code for collecting data with the Low-cost Benthic Sensing Trap-Attached System (LoBSTAS), a project birthed at http://geotracerkitchen.org/. Bootrun.py is a code that will be run on startup, and this is where directions to the Pi will go. GetData.py is where data collection is initiated, while Ready.py displays data collection settings to user for checking before initiating deployment. Additional comments on the functions of the code can be found in the respective scripts.
 
 Hackaday Project Logs:
 https://hackaday.io/project/160192-lobstas-underwater-camera-sensor
